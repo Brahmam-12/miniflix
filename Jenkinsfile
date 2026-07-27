@@ -31,10 +31,10 @@ pipeline {
             steps {
                 sh 'npm install'
 
-                // Simple sanity check
-                sh 'node -e "require(\\"./app.js\\")" || true'
+                // Check JavaScript syntax only
+                sh 'node --check app.js'
 
-                sh 'echo "Tests Passed"'
+                echo 'Node.js syntax check passed.'
             }
         }
 
