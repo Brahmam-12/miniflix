@@ -54,7 +54,7 @@ steps:
       command: push
       repository: $(SERVICE_NAME)
       dockerfile: Dockerfile
-      containerRegistry: miniflix-acr-connection
+      containerRegistry: miniflix-docker-connection
 
       tags: |
         $(Build.BuildId)
