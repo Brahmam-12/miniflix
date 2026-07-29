@@ -48,10 +48,10 @@ steps:
     displayName: "Show Docker Images"
 
   - task: Docker@2
-    displayName: "Build and push Image"
+    displayName: "push Image"
 
     inputs:
-      command: buildAndPush
+      command: push
       repository: $(SERVICE_NAME)
       dockerfile: Dockerfile
       containerRegistry: miniflix-acr-connection
