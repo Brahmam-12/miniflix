@@ -1,0 +1,62 @@
+trigger:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  SERVICE_NAME: 'miniflix'
+
+  ACR_NAME:  'miniflixacr-e6frchh0hvg3h4ba'
+  ACR_REGISTRY: $(ACR_NAME).azurecr.io
+
+  IMAGE_NAME: $(ACR_REGISTRY)/$(SERVICE_NAME)
+  IMAGE_TAG: $(Build.BuildId)
+
+steps:
+  #checkout
+  - checkout: self
+  - script: |
+      echo "===Git Information==="
+      git log --oneline -5
+      echo "Branch: $(Build.SourceBranchName)"
+      echo "Commit: $(Build.SourceVersion)"
+    displayName: "Checkout Information"
+
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '22.x'
+    displayName: "Install node.js"
+
+  - script: |
+      npm install
+    displayName: "Install Dependencies"
+
+  - script: |
+      node --check app.js
+    displayName: "Node.js syntax Check"
+
+  - script: |
+      docker build \
+        -t $(IMAGE_NAME):$(IMAGE_TAG) \
+        -t $(IMAGE_NAME):latest \
+        .
+    displayName: "Docker Build"
+
+  - script: |
+      docker images | grep $(SERVICE_NAME)
+    displayName: "Show Docker Images"
+
+  - task: Docker@2
+    displayName: "Build and push Image"
+
+    inputs:
+      command: buildAndPush
+      repository: $(SERVICE_NAME)
+      dockerfile: Dockerfile
+      containerRegistry: miniflix-acr-connection
+
+      tags: |
+        $(Build.BuildId)
+        latest
+
