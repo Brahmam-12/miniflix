@@ -26,7 +26,7 @@ pipeline {
                 sh 'git branch -a'
                 
                 echo "Checking the 5 latest commits"
-                sh 'git log --oneline 5'
+                sh 'git log --oneline -5'
 
                 echo "Checking Commit id"
                 sh 'git rev-parse HEAD'
@@ -73,7 +73,7 @@ pipeline {
                     sh """
                         set -e
                         echo \${ACR_PASS} | docker login ${acr_login_server} \
-                            -u ${acr_name}  --password-stdin
+                            -u ${ACR_USER}  --password-stdin
                         
                         echo "Pushing ${full_image}"
                         docker push ${full_image}
