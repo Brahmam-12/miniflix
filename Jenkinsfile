@@ -2,13 +2,14 @@ pipeline {
     agent any
 
     environment {
-        acr_name = 'miniflixacr'
         service_name = 'miniflix'
         acr_login_server = 'miniflixacr.azurecr.io'
 
         image_name = "${acr_login_server}/${service_name}"
         image_tag = "${BUILD_NUMBER}"
         full_image = "${image_name}:${image_tag}"
+
+        cred_id = 'miniflix-id-test' //this is teh id we will give when we configured the credentials of acr at the jenkins server credential of gloabl
     }
 
     stages {
@@ -64,7 +65,7 @@ pipeline {
                 echo"Logging into ACR Using Docker cred"
                 withCredentials([
                     usernamePassword(
-                        credentialsId: "${acr_name}",
+                        credentialsId: "${cred_id}",
                         usernameVariable: 'ACR_USER',
                         passwordVariable: "ACR_PASS"
                     )
