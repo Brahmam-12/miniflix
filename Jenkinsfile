@@ -2,16 +2,16 @@ pipeline {
     agent any
 
     environment {
-        acr_name: 'miniflixacr'
-        service_name: 'miniflix'
-        acr_login_server: 'miniflixacr.azurecr.io'
+        acr_name = 'miniflixacr'
+        service_name = 'miniflix'
+        acr_login_server = 'miniflixacr.azurecr.io'
 
-        image_name: "${acr_login_server}/${service_name}"
-        image_tag: "${BUILD_NUMBER}"
-        full_image: "${image_name}:${image_tag}"
+        image_name = "${acr_login_server}/${service_name}"
+        image_tag = "${BUILD_NUMBER}"
+        full_image = "${image_name}:${image_tag}"
     }
 
-    stages{
+    stages {
         stage('Checkout and test'){
             steps {
                 echo "checkout scm is automatically will checkout from teh source contro manager that triggered"
@@ -64,8 +64,8 @@ pipeline {
                 echo"Logging into ACR Using Docker cred"
                 withCredentials([
                     usernamePassword(
-                        credentialsId: "${acr_name}"
-                        usernameVariable: 'ACR_USER'
+                        credentialsId: "${acr_name}",
+                        usernameVariable: 'ACR_USER',
                         passwordVariable: "ACR_PASS"
                     )
                 ]){
@@ -87,13 +87,13 @@ pipeline {
     }
 
     post {
-        success: {
+        success {
             echo 'Build Success'
         }
-        failure{
+        failure {
             echo 'Build failure'
         }
-        always{
+        always {
             echo 'Cleaning workspace folder paths...'
             cleanWs()
         }
